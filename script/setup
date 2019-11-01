@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker-compose build
+docker-compose run web bin/rails db:drop db:create db:migrate
