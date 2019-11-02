@@ -10,6 +10,8 @@ function askPermission() {
   return new Promise((resolve, reject) => {
     const permission_result = Notification.requestPermission(result => resolve(result));
 
+    console.log('Max actions: ', Notification.maxActions);
+
     if (permission_result) permission_result.then(resolve, reject);
   })
   .then((permission_result) => {
@@ -42,13 +44,18 @@ function registerServiceWorker() {
     .then((push_subscription) => {
       console.log('PushSubscription created.');
 
+      const payload = {
+        subscription: push_subscription,
+        max_actions: Notification.maxActions,
+      };
+
       // send to API for storage
       fetch('/push_subscriptions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(push_subscription),
+        body: JSON.stringify(payload),
       })
       .then((response) => {
         if (response.ok)

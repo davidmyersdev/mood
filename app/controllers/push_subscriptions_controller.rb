@@ -2,7 +2,10 @@ class PushSubscriptionsController < ApplicationController
   skip_before_action :authenticate_by_token, only: [:create]
 
   def create
-    subscription = PushSubscription.create!(subscription: push_subscription_params)
+    subscription = PushSubscription.create!(
+      max_actions: push_subscription_params[:max_actions],
+      subscription: push_subscription_params[:subscription],
+    )
 
     render json: subscription, status: :created
   rescue ActiveRecord::RecordInvalid => e
@@ -13,11 +16,14 @@ class PushSubscriptionsController < ApplicationController
 
   def push_subscription_params
     params.permit(
-      :endpoint,
-      :expirationTime,
-      keys: [
-        :p256dh,
-        :auth,
+      :max_actions,
+      subscription: [
+        :endpoint,
+        :expirationTime,
+        keys: [
+          :auth,
+          :p256dh,
+        ],
       ],
     )
   end

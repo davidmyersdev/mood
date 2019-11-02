@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_02_153414) do
+ActiveRecord::Schema.define(version: 2019_11_02_210518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_153414) do
     t.jsonb "subscription", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_actions"
     t.index ["subscription"], name: "index_push_subscriptions_on_subscription", unique: true
     t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
