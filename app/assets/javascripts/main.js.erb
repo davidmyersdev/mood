@@ -43,7 +43,20 @@ function registerServiceWorker() {
       console.log('PushSubscription created.');
 
       // send to API for storage
-      // JSON.stringify(push_subscription);
+      fetch('/push_subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(push_subscription),
+      })
+      .then((response) => {
+        if (response.ok)
+          console.log('Successful response.');
+        else
+          console.log('Unsuccessful response');
+      })
+      .catch(error => console.error(error));
     })
     .catch((error) => {
       console.error(error);
