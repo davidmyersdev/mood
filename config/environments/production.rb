@@ -92,10 +92,12 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # config.middleware.insert_before 0, Rack::Cors do
-  #   allow do
-  #     origins 'vigorous.dev'
-  #     resource '*', headers: :any, methods: [:options, :get, :post, :put, :delete]
-  #   end
-  # end
+  config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      allowed_origins = ENV['ALLOWED_ORIGINS']&.split(',')
+
+      origins *allowed_origins if allowed_origins.present?
+      resource '*', headers: :any, methods: [:options, :get, :post, :put, :delete]
+    end
+  end
 end
