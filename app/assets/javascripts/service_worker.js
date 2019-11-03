@@ -30,3 +30,7 @@ self.addEventListener('notificationclick', (event) => {
       break;
   }
 });
+
+self.addEventListener('notificationclose', (event) => {
+  console.log('Notification closed.');
+});
