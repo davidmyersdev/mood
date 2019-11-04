@@ -28,21 +28,21 @@ class MoodService
     def happy
       {
         action: 'happy',
-        title: '🙂 Happy',
+        title: '😄 Happy',
       }.freeze
     end
 
     def meh
       {
         action: 'meh',
-        title: '😕 Meh',
+        title: '😐 Meh',
       }.freeze
     end
 
     def sad
       {
         action: 'sad',
-        title: '😞 Sad',
+        title: '😔 Sad',
       }.freeze
     end
 
