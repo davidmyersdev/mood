@@ -4,7 +4,7 @@ class PushSubscriptionsController < ApplicationController
   def create
     subscription = PushSubscription.create!(
       max_actions: push_subscription_params[:max_actions],
-      subscription: push_subscription_params[:subscription],
+      data: push_subscription_params[:subscription],
     )
 
     render json: subscription, status: :created

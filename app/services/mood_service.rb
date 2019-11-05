@@ -7,7 +7,7 @@ class MoodService
         title: 'Mood',
       }
 
-      NotificationService.send(message, push_subscription.subscription.with_indifferent_access)
+      NotificationService.send(message, push_subscription.data.with_indifferent_access)
     end
 
     private
