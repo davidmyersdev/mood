@@ -1,13 +1,15 @@
 class MoodService
   class << self
     def notify(push_subscription)
-      message = {
-        actions: actions(push_subscription.max_actions),
-        body: 'How are you feeling right now?',
-        title: 'Mood',
-      }
+      notification = push_subscription.notifications.create!(
+        data: {
+          actions: actions(push_subscription.max_actions),
+          body: 'How are you feeling right now?',
+          title: 'Mood',
+        },
+      )
 
-      NotificationService.send(message, push_subscription.data.with_indifferent_access)
+      NotificationService.send(notification)
     end
 
     private
