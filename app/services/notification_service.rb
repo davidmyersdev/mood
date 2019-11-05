@@ -14,13 +14,22 @@ class NotificationService
       Webpush.payload_send(
         auth: subscription[:keys][:auth],
         endpoint: subscription[:endpoint],
-        message: JSON.generate(notification.data),
+        message: serialize_notification(notification),
         p256dh: subscription[:keys][:p256dh],
         vapid: {
           private_key: Rails.application.credentials.vapid_private_key,
           public_key: Rails.application.credentials.vapid_public_key,
           subject: Rails.application.credentials.vapid_subject,
         },
+      )
+    end
+
+    def serialize_notification(notification)
+      JSON.generate(
+        notification.attributes.with_indifferent_access.slice(
+          :data,
+          :id,
+        )
       )
     end
   end

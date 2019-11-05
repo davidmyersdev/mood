@@ -1,18 +1,24 @@
 self.addEventListener('push', (event) => {
-  const data = event.data.json();
-  const notification = self.registration.showNotification(data.title, {
-    actions: data.actions,
-    body: data.body,
-  });
+  const notification = event.data.json();
 
-  event.waitUntil(notification);
+  event.waitUntil(
+    self.registration.showNotification(notification.data.title, {
+      actions: notification.data.actions,
+      body: notification.data.body,
+      data: {
+        notification_id: notification.id,
+      },
+    })
+  );
 });
 
 self.addEventListener('notificationclick', (event) => {
-  console.log(event);
-
   if (!event.action) {
-    return console.log('Clicked on notfication.');
+    console.log('Clicked on notfication.');
+
+    console.log('Notification data: ', event.notification.data);
+
+    return true;
   }
 
   switch (event.action) {
