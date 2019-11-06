@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_06_023753) do
+ActiveRecord::Schema.define(version: 2019_11_06_031723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "notification_responses", force: :cascade do |t|
+    t.bigint "notification_id"
+    t.jsonb "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data"], name: "index_notification_responses_on_data"
+    t.index ["notification_id"], name: "index_notification_responses_on_notification_id"
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.bigint "push_subscription_id"
@@ -44,6 +53,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_023753) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "notification_responses", "notifications"
   add_foreign_key "notifications", "push_subscriptions"
   add_foreign_key "push_subscriptions", "users"
 end

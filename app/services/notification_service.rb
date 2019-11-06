@@ -29,6 +29,7 @@ class NotificationService
         notification.attributes.with_indifferent_access.slice(
           :data,
           :id,
+          :nonce,
         )
       )
     end
