@@ -6,6 +6,8 @@ services:
       - ./tmp/db:/var/lib/postgresql/data
   web:
     build: .
+    stdin_open: true
+    tty: true
     volumes:
       - .:/app
     ports:
