@@ -6,6 +6,14 @@ class Notification < ApplicationRecord
 
   validates :data, presence: true
 
+  scope :successful, -> { where.not(dispatched_at: nil) }
+
+  def dispatched_after?(time)
+    return false unless dispatched_at
+
+    dispatched_at > time
+  end
+
   private
 
   def set_nonce
