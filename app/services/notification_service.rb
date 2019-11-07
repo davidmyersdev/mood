@@ -4,6 +4,11 @@ class NotificationService
       webpush_send(notification).tap do |response|
         notification.update!(dispatched_at: Time.current) if response.kind_of? Net::HTTPSuccess
       end
+    rescue StandardError => e
+      # TODO: handle webpush errors
+      # https://github.com/zaru/webpush/blob/master/lib/webpush/request.rb#L158-L175
+      Rails.logger.info('WebPush Error')
+      Rails.logger.info(e.inspect)
     end
 
     private
