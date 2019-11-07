@@ -11,6 +11,8 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
   if (!event.action) {
     console.log('Clicked on notfication.');
     console.log(event.notification.data);
