@@ -9,6 +9,7 @@ module Notifications
         data: {
           choice: response_params[:choice],
         },
+        mood: Mood.find_by(slug: response_params[:choice]),
       )
 
       render json: response, status: :created

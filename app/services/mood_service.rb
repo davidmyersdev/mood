@@ -28,31 +28,26 @@ class MoodService
     end
 
     def happy
-      {
-        action: 'happy',
-        title: '😄 Happy',
-      }.freeze
+      @happy ||= serialize_action(Mood.happy)
     end
 
     def meh
-      {
-        action: 'meh',
-        title: '😐 Meh',
-      }.freeze
+      @meh ||= serialize_action(Mood.meh)
     end
 
     def sad
-      {
-        action: 'sad',
-        title: '😔 Sad',
-      }.freeze
+      @sad ||= serialize_action(Mood.sad)
     end
 
     def upset
+      @upset ||= serialize_action(Mood.upset)
+    end
+
+    def serialize_action(mood)
       {
-        action: 'upset',
-        title: '😠 Upset',
-      }.freeze
+        action: mood.slug,
+        title: mood.description,
+      }
     end
   end
 end
