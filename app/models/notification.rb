@@ -14,6 +14,11 @@ class Notification < ApplicationRecord
     dispatched_at > time
   end
 
+  def regenerate_nonce!
+    set_nonce
+    save!
+  end
+
   private
 
   def set_nonce

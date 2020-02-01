@@ -1,0 +1,21 @@
+<div class="mood-form">
+  <%= form_with url: notification_responses_path, local: true do %>
+    <%= hidden_field_tag(:nonce, notification_nonce) %>
+
+    <fieldset class="checkboxes-container">
+
+      <% moods.each do |mood| %>
+        <label class="checkbox-container">
+          <input type="checkbox" name="choices[]" value="<%= mood.slug %>">
+          <span class="checkbox">
+            <span class="checkmark"></span>
+          </span>
+          <span class="label"><%= mood.description %></span>
+        </label>
+      <% end %>
+
+      <%= submit_tag(:Submit) %>
+
+    </fieldset>
+  <% end %>
+</div>
