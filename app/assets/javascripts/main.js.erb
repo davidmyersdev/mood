@@ -28,14 +28,14 @@ function askPermission() {
 function registerServiceWorker() {
   return navigator
     .serviceWorker
-    .register('<%= javascript_path 'service_worker' %>')
+    .register(window.service_worker_path)
     .then((registration) => {
       console.log('Service worker registered.');
 
       const subscribeOptions = {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(
-          '<%= Rails.application.credentials.vapid_public_key %>'
+          window.vapid_public_key
         ),
       };
 
