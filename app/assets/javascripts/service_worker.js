@@ -15,32 +15,36 @@ self.addEventListener('notificationclick', (event) => {
 
   if (!event.action) {
     console.log('Clicked on notfication.');
-    console.log(event.notification.data);
 
-    return true;
+    const page = `/notifications/${event.notification.data.id}/responses/new?nonce=${event.notification.data.nonce}`;
+
+    event.waitUntil(
+      clients.openWindow(page)
+    );
   }
+  else {
+    switch (event.action) {
+      case 'happy':
+        console.log('Clicked on Happy!');
+        break;
+      case 'meh':
+        console.log('Clicked on Meh!');
+        break;
+      case 'sad':
+        console.log('Clicked on Sad!');
+        break;
+      case 'upset':
+        console.log('Clicked on Upset!');
+        break;
+      default:
+        console.log('Unknown action.');
+        break;
+    }
 
-  switch (event.action) {
-    case 'happy':
-      console.log('Clicked on Happy!');
-      break;
-    case 'meh':
-      console.log('Clicked on Meh!');
-      break;
-    case 'sad':
-      console.log('Clicked on Sad!');
-      break;
-    case 'upset':
-      console.log('Clicked on Upset!');
-      break;
-    default:
-      console.log('Unknown action.');
-      break;
+    event.waitUntil(
+      postAction(event.notification.data, event.action)
+    );
   }
-
-  event.waitUntil(
-    postAction(event.notification.data, event.action)
-  );
 });
 
 self.addEventListener('notificationclose', (event) => {
@@ -57,7 +61,7 @@ function postAction(notification, choice) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      choice: choice,
+      choices: [choice],
       nonce: notification.nonce,
     }),
   })

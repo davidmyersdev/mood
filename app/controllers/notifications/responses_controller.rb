@@ -1,15 +1,21 @@
 module Notifications
   class ResponsesController < ApplicationController
-    skip_before_action :authenticate_by_token, only: [:create]
+    skip_before_action :authenticate_by_token
     before_action :authenticate_by_nonce
+
+    helper_method :moods
+    helper_method :notification_nonce
+
+    def new
+      notification.regenerate_nonce!
+    end
 
     def create
       response = NotificationResponse.create!(
         notification: notification,
         data: {
-          choice: response_params[:choice],
+          choices: response_params[:choices],
         },
-        mood: Mood.find_by(slug: response_params[:choice]),
       )
 
       render json: response, status: :created
@@ -25,6 +31,10 @@ module Notifications
       notification.update!(nonce: nil)
     end
 
+    def moods
+      Mood.all
+    end
+
     def notification
       @notification ||= Notification.where(
         id: response_params[:notification_id],
@@ -32,8 +42,12 @@ module Notifications
       ).first
     end
 
+    def notification_nonce
+      notification.nonce
+    end
+
     def response_params
-      params.permit(:choice, :nonce, :notification_id)
+      params.permit(:nonce, :notification_id, choices: [])
     end
   end
 end

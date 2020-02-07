@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :notifications, only: [] do
     scope module: :notifications do
-      resources :responses, only: [:create]
+      resources :responses, only: [:create, :new]
     end
   end
 
