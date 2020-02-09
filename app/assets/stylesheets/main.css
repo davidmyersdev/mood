@@ -15,6 +15,7 @@ body {
 .checkboxes-container {
   border: none;
   display: inline-flex;
+  flex-direction: column;
 }
 
 .checkbox-container, .checkboxes-container input[type=submit] {
