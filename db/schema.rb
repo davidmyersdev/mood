@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_11_000657) do
+ActiveRecord::Schema.define(version: 2020_02_25_135540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2019_11_11_000657) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "mood_id"
+    t.text "notes"
     t.index ["data"], name: "index_notification_responses_on_data"
     t.index ["mood_id"], name: "index_notification_responses_on_mood_id"
     t.index ["notification_id"], name: "index_notification_responses_on_notification_id"

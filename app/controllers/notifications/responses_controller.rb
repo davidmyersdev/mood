@@ -16,6 +16,7 @@ module Notifications
         data: {
           choices: response_params[:choices],
         },
+        notes: response_params[:notes],
       )
 
       render json: response, status: :created
@@ -47,7 +48,7 @@ module Notifications
     end
 
     def response_params
-      params.permit(:nonce, :notification_id, choices: [])
+      params.permit(:nonce, :notes, :notification_id, choices: [])
     end
   end
 end
