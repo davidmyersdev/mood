@@ -1,11 +1,13 @@
 version: '3'
 services:
   db:
+    container_name: mood_db
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
   web:
     build: .
+    container_name: mood
     stdin_open: true
     tty: true
     volumes:
