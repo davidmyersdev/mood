@@ -11,7 +11,7 @@ module Notifications
     end
 
     def create
-      response = NotificationResponse.create!(
+      NotificationResponse.create!(
         notification: notification,
         data: {
           choices: response_params[:choices],
@@ -19,7 +19,9 @@ module Notifications
         notes: response_params[:notes],
       )
 
-      render json: response, status: :created
+      session[:push_subscription_id] = notification.push_subscription_id
+
+      redirect_to notification_history_index_path
     rescue ActiveRecord::RecordInvalid => e
       render json: e.message, status: :bad_request
     end

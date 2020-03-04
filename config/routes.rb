@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     scope module: :notifications do
       resources :responses, only: [:create, :new]
     end
+
+    scope module: :notifications do
+      resources :history, only: [:index]
+    end
   end
 
   resources :push_subscriptions, only: [:create]
