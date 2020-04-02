@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     end
 
     scope module: :notifications do
-      resources :history, only: [:index]
+      collection do
+        resources :history, only: [:index]
+      end
     end
   end
 

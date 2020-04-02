@@ -3,8 +3,9 @@ module Notifications
     skip_before_action :authenticate_by_token
     before_action :authenticate_by_session
 
+    helper_method :notification_responses
+
     def index
-      render json: notification_responses
     end
 
     private
@@ -22,7 +23,10 @@ module Notifications
     end
 
     def notification_responses
-      NotificationResponse.where(notification: push_subscription.notifications)
+      NotificationResponse
+        .where(notification: push_subscription.notifications)
+        .where(created_at: 2.weeks.ago..Time.current)
+        .order(created_at: :asc)
     end
   end
 end
