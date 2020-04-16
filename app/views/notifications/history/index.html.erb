@@ -1,0 +1,119 @@
+<canvas id="mood-history"></canvas>
+<input id="notification-responses" type="hidden" value="<%= notification_responses.to_json %>">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+<script>
+  const color_map = {
+    happy: 'rgba(99, 255, 132, 0.65)',
+    anxious: 'rgba(255, 99, 132, 0.65)',
+    sad: 'rgba(99, 132, 255, 0.65)',
+  };
+  const notification_responses = JSON.parse(document.getElementById('notification-responses').value);
+
+  function get_dates() {
+    let start = moment(notification_responses[0].created_at).startOf('day');
+    let end = moment(notification_responses[notification_responses.length - 1].created_at).startOf('day');
+    let now = start;
+    let dates = [];
+
+    while(now.isSameOrBefore(end)) {
+      dates.push(now.clone());
+      now.add(1, 'days');
+    }
+
+    return dates;
+  }
+
+  function get_moods() {
+    let all_moods = [];
+
+    for (let response of notification_responses) {
+      let moods = response.data.choices || [];
+
+      for (let mood of moods) {
+        if (!all_moods.includes(mood)) {
+          all_moods.push(mood);
+        }
+      }
+    }
+
+    return all_moods;
+  }
+
+  const dates = get_dates();
+  const moods = get_moods();
+
+  function make_datasets() {
+    let datasets = [];
+
+    for (let mood of moods) {
+      datasets.push(make_dataset(mood));
+    }
+
+    return datasets;
+  }
+
+  function make_dataset(mood) {
+    return {
+      barPercentage: 1,
+      backgroundColor: color_map[mood],
+      data: make_data(mood),
+      label: mood,
+    };
+  }
+
+  function make_data(mood) {
+    let data = [];
+
+    for (let date of dates) {
+      data.push({
+        t: date,
+        y: 0,
+      });
+    }
+
+    for (let response of notification_responses) {
+      let response_moods = response.data.choices || [];
+      let created_at = moment(response.created_at).startOf('day');
+
+      if (response_moods.includes(mood)) {
+        let found = data.find(entry => entry.t.isSame(created_at));
+
+        found.y++;
+      }
+    }
+
+    return data;
+  }
+
+  const datasets = make_datasets();
+
+  var context = document.getElementById('mood-history').getContext('2d');
+  var chart = new Chart(context, {
+    type: 'bar',
+    data: {
+      datasets: datasets,
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          offset: true,
+          stacked: true,
+          type: 'time',
+          time: {
+            stepSize: 1,
+            unit: 'day',
+          },
+        }],
+        yAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true,
+            precision: 0,
+          }
+        }]
+      }
+    }
+  });
+</script>

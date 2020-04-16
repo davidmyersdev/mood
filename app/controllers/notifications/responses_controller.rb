@@ -21,7 +21,7 @@ module Notifications
 
       session[:push_subscription_id] = notification.push_subscription_id
 
-      redirect_to notification_history_index_path
+      redirect_to history_index_path
     rescue ActiveRecord::RecordInvalid => e
       render json: e.message, status: :bad_request
     end
