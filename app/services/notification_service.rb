@@ -6,7 +6,7 @@ class NotificationService
       end
     rescue StandardError => e
       # TODO: handle webpush errors
-      # https://github.com/zaru/webpush/blob/master/lib/webpush/request.rb#L158-L175
+      # https://github.com/zaru/webpush/blob/c37b3d2f0550367a830da697f87d2d3f85bafddd/lib/webpush/request.rb#L158-L175
       Rails.logger.info('WebPush Error')
       Rails.logger.info(e.inspect)
     end
