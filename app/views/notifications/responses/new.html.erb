@@ -1,7 +1,5 @@
 <div class="mood-form">
   <%= form_with url: notification_responses_path, local: true do %>
-    <%= hidden_field_tag(:nonce, notification_nonce) %>
-
     <fieldset class="checkboxes-container">
 
       <% moods.each do |mood| %>

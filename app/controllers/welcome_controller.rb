@@ -1,6 +1,10 @@
 class WelcomeController < ApplicationController
-  skip_before_action :authenticate_by_token, only: [:index]
+  skip_before_action :authenticate_by_session
 
   def index
+    redirect_to history_index_path if current_user.persisted?
+  end
+
+  def sign_up
   end
 end

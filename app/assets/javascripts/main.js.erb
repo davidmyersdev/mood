@@ -3,7 +3,30 @@ window.addEventListener('load', () => {
   if (!('PushManager' in window)) return console.log('PushManager not supported');
 
   askPermission();
-  registerServiceWorker();
+  registerServiceWorker((push_subscription) => {
+    console.log('PushSubscription created.');
+
+    const payload = {
+      subscription: push_subscription,
+      max_actions: Notification.maxActions,
+    };
+
+    // send to API for storage
+    fetch('/push_subscriptions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((response) => {
+      if (response.ok)
+        console.log('PushSubscription stored.');
+      else
+        console.log('PushSubscription not stored.');
+    })
+    .catch(error => console.error(error));
+  });
 });
 
 function askPermission() {
@@ -25,7 +48,7 @@ function askPermission() {
   });
 }
 
-function registerServiceWorker() {
+function registerServiceWorker(callback) {
   return navigator
     .serviceWorker
     .register(window.service_worker_path)
@@ -42,28 +65,7 @@ function registerServiceWorker() {
       return registration.pushManager.subscribe(subscribeOptions);
     })
     .then((push_subscription) => {
-      console.log('PushSubscription created.');
-
-      const payload = {
-        subscription: push_subscription,
-        max_actions: Notification.maxActions,
-      };
-
-      // send to API for storage
-      fetch('/push_subscriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-      })
-      .then((response) => {
-        if (response.ok)
-          console.log('PushSubscription stored.');
-        else
-          console.log('PushSubscription not stored.');
-      })
-      .catch(error => console.error(error));
+      callback(push_subscription);
     })
     .catch((error) => {
       console.error(error);

@@ -4,15 +4,14 @@
 
 <p><a href="https://github.com/aVigorousDev/mood">View on GitHub</a></p>
 
-<h3>Sign in below</h3>
+<h3>Sign up below</h3>
 
-<p>No account? <a href="/sign_up">Sign up</a> instead.</p>
-
-<%= form_with url: sign_in_users_path, local: true do %>
+<%= form_with url: sign_up_users_path, local: true do %>
 
   <div class="form-group">
     <label for="signup-email">Email</label>
     <input type="email" id="signup-email" class="form-control" name="email">
+    <small id="signup-email-sub" class="form-text text-muted">We'll never share your email with anyone else.</small>
   </div>
 
   <div class="form-group">
@@ -20,5 +19,5 @@
     <input type="password" id="signup-password" class="form-control" name="password">
   </div>
 
-  <button type="submit" class="btn btn-primary">Sign In</button>
+  <button type="submit" class="btn btn-primary">Sign Up</button>
 <% end %>
