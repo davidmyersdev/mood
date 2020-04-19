@@ -37,6 +37,18 @@ vapid_subject: https://yourdomain.example
 
 These secrets are all necessary to run the app. The `secret_key_base` is used by Rails, but the VAPID keys are necessary to send web push notifications. This process will generate a new set of VAPID keys for you. For more information about VAPID, [check out the spec](https://tools.ietf.org/html/rfc8292).
 
+### testing
+
+#### Insomnia REST Client
+
+There is a workspace export file in this repo at `insomnia.json`. To update this file, create a manual export of the workspace with your changes at `insomnia-export.json`, and run the following command.
+
+```bash
+cat insomnia-export.json | jq --sort-keys > insomnia.json
+```
+
+Insomnia exports are minified by default, and there is no guarantee on key order. This will make the diffs easier to reason about.
+
 ## hosting
 
 Do the following to host this app.

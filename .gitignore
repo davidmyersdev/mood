@@ -26,3 +26,6 @@
 # Ignore master key and encrypted secrets
 /config/master.key
 /config/credentials.yml.enc
+
+# Ignore minified Insomnia export file
+insomnia-export.json
