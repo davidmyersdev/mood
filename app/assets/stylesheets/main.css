@@ -5,6 +5,8 @@
 body {
   font-family: sans-serif;
   letter-spacing: 2px;
+  margin: 0;
+  padding: 0.5em;
 }
 
 .mood-form {
@@ -87,4 +89,39 @@ body {
 
 .checkbox-container input:not(:checked) + .checkbox .checkmark {
   display: none;
+}
+
+.mood-history-response {
+  border: 0.125em solid #333;
+  margin: 0.5em 0 0.5em 0;
+  max-width: 40em;
+  padding: 1em;
+}
+
+.mood-history-response ul {
+  display: flex;
+  font-size: 0.75em;
+  list-style: none;
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 0;
+}
+
+.mood-history-response li {
+  background-color: #ccc;
+  color: #fff;
+  padding: 0.25em 0.75em;
+  margin-right: 0.25em;
+}
+
+.mood-history-response li.mood-label-happy {
+  background-color: rgba(99, 255, 132, 0.65);
+}
+
+.mood-history-response li.mood-label-anxious {
+  background-color: rgba(255, 99, 132, 0.65);
+}
+
+.mood-history-response li.mood-label-sad {
+  background-color: rgba(99, 132, 255, 0.65);
 }
