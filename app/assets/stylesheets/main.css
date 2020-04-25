@@ -92,36 +92,32 @@ body {
 }
 
 .mood-history-response {
-  border: 0.125em solid #333;
+  border: 0.0675em solid #d1d5da;
   margin: 0.5em 0 0.5em 0;
   max-width: 40em;
-  padding: 1em;
 }
 
-.mood-history-response ul {
+.mood-history-response > * {
+  padding: 0.5rem;
+}
+
+.mood-history-response .labels {
+  background-color: #f6f8fa;
+  border-bottom: 0.0675em solid #d1d5da;
   display: flex;
+  flex-wrap: wrap;
   font-size: 0.75em;
   list-style: none;
   margin: 0;
-  margin-bottom: 1em;
-  padding: 0;
 }
 
-.mood-history-response li {
-  background-color: #ccc;
-  color: #fff;
+.mood-history-response .labels .label {
+  background-color: #eee;
+  color: #000;
+  margin-right: 0.5em;
   padding: 0.25em 0.75em;
-  margin-right: 0.25em;
 }
 
-.mood-history-response li.mood-label-happy {
-  background-color: rgba(99, 255, 132, 0.65);
-}
-
-.mood-history-response li.mood-label-anxious {
-  background-color: rgba(255, 99, 132, 0.65);
-}
-
-.mood-history-response li.mood-label-sad {
-  background-color: rgba(99, 132, 255, 0.65);
+.mood-history-response .timestamp {
+  font-size: 0.75em;
 }
