@@ -1,0 +1,9 @@
+{
+  "name": "Mood",
+  "description": "Keeping track of emotions over time for better mental health awareness.",
+  "scripts": {
+    "dokku": {
+      "postdeploy": "bin/rails db:migrate"
+    }
+  }
+}
