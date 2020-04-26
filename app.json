@@ -3,6 +3,7 @@
   "description": "Keeping track of emotions over time for better mental health awareness.",
   "scripts": {
     "dokku": {
+      "predeploy": "bin/rails assets:precompile",
       "postdeploy": "bin/rails db:migrate"
     }
   }
