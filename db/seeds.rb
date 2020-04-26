@@ -5,3 +5,16 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+mood_slugs = [
+  :anxious,
+  :happy,
+  :melancholy,
+  :sad,
+  :stressed,
+  :upset,
+]
+
+mood_slugs.each do |slug|
+  Mood.for(slug)
+end
