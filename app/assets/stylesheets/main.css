@@ -4,7 +4,7 @@
 
 body {
   font-family: sans-serif;
-  letter-spacing: 2px;
+  letter-spacing: 0.0625em;
   margin: 0;
   padding: 0.5em;
 }
@@ -92,7 +92,7 @@ body {
 }
 
 .mood-history-response {
-  border: 0.0675em solid #d1d5da;
+  border: 0.0625em solid #d1d5da;
   margin: 0.5em 0 0.5em 0;
   max-width: 40em;
 }
@@ -103,7 +103,7 @@ body {
 
 .mood-history-response .labels {
   background-color: #f6f8fa;
-  border-bottom: 0.0675em solid #d1d5da;
+  border-bottom: 0.0625em solid #d1d5da;
   display: flex;
   flex-wrap: wrap;
   font-size: 0.75em;
