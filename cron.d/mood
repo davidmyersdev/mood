@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+MAILTO=you@yourdomain.example
+PATH=/usr/local/bin:/usr/bin:/bin
+SHELL=/bin/bash
+
+# https://en.wikipedia.org/wiki/Cron
+# |--------- minute, 0 - 59
+# │ |------- hour, 0 - 23
+# │ │ |----- day of the month, 1 - 31
+# │ │ │ |--- month, 1 - 12
+# │ │ │ │ |- day of the week, 0 - 6, 0 is sunday
+# * * * * *  [user] command-to-execute --with params
+
+# send 1st mood notification of the day
+0 14 * * * dokku dokku --rm run mood bin/rails notify_subscribers
+
+# send 2nd mood notification of the day
+0 18 * * * dokku dokku --rm run mood bin/rails notify_subscribers
+
+# send 3rd mood notification of the day
+0 22 * * * dokku dokku --rm run mood bin/rails notify_subscribers
