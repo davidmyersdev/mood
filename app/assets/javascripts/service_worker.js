@@ -3,7 +3,6 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(
     self.registration.showNotification(notification.data.title, {
-      actions: notification.data.actions,
       body: notification.data.body,
       data: notification,
     })
@@ -13,65 +12,23 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  if (!event.action) {
-    console.log('Clicked on notfication.');
+  const type = event.notification.data.data.type;
+  let url;
 
-    const page = `/notifications/${event.notification.data.id}/responses/new?nonce=${event.notification.data.nonce}`;
-
-    event.waitUntil(
-      clients.openWindow(page)
-    );
+  switch (type) {
+    case 'authentication':
+      url = `/ephemeral/authenticate_by_notification?nonce=${event.notification.data.nonce}&notification_id=${event.notification.data.id}`;
+      break;
+    default:
+      url = `/notifications/${event.notification.data.id}/responses/new?nonce=${event.notification.data.nonce}`;
+      break;
   }
-  else {
-    switch (event.action) {
-      case 'happy':
-        console.log('Clicked on Happy!');
-        break;
-      case 'meh':
-        console.log('Clicked on Meh!');
-        break;
-      case 'sad':
-        console.log('Clicked on Sad!');
-        break;
-      case 'upset':
-        console.log('Clicked on Upset!');
-        break;
-      default:
-        console.log('Unknown action.');
-        break;
-    }
 
-    event.waitUntil(
-      postAction(event.notification.data, event.action)
-    );
-  }
+  event.waitUntil(
+    clients.openWindow(url)
+  );
 });
 
 self.addEventListener('notificationclose', (event) => {
   console.log('Notification closed.');
 });
-
-function postAction(notification, choice) {
-  console.log('notification', notification);
-  console.log('choice', choice);
-
-  return fetch(`/notifications/${notification.id}/responses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      choices: [choice],
-      nonce: notification.nonce,
-    }),
-  })
-  .then((response) => {
-    if (response.ok)
-      console.log('Choice logged.');
-    else
-      console.log('Choice not logged.')
-
-    console.log(response);
-  })
-  .catch(error => console.error(error));
-}

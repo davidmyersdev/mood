@@ -1,20 +1,37 @@
 class PushSubscriptionsController < ApplicationController
-  skip_before_action :authenticate_by_token, only: [:create]
+  skip_before_action :authenticate_by_session, only: [:create, :log_me_in]
 
   def create
-    subscription = PushSubscription.create!(
-      max_actions: push_subscription_params[:max_actions],
-      data: push_subscription_params[:subscription],
-    )
+    @subscription = PushSubscription.find_or_create_by!(data: data) do |ps|
+      ps.max_actions = max_actions
+      ps.user = current_user if current_user.persisted?
+    end
 
     render json: subscription, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: e.message, status: :bad_request
   end
 
+  # this should probably live in the ephemeral controller too... 🤷‍
+  def log_me_in
+    @subscription = PushSubscription.find_by!(data: data)
+
+    Notifications::AuthenticationService.notify!(subscription)
+  rescue ActiveRecord::RecordInvalid => e
+    render json: e.message, status: :bad_request
+  end
+
   private
 
-  def push_subscription_params
+  def data
+    subscription_params[:subscription]
+  end
+
+  def max_actions
+    subscription_params[:max_actions]
+  end
+
+  def subscription_params
     params.permit(
       :max_actions,
       subscription: [

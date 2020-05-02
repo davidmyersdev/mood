@@ -1,13 +1,11 @@
 module Notifications
   class ResponsesController < ApplicationController
-    skip_before_action :authenticate_by_token
-    before_action :authenticate_by_nonce
+    skip_before_action :authenticate_by_session
+    before_action :authenticate
 
     helper_method :moods
-    helper_method :notification_nonce
 
     def new
-      notification.regenerate_nonce!
     end
 
     def create
@@ -19,8 +17,6 @@ module Notifications
         notes: response_params[:notes],
       )
 
-      session[:push_subscription_id] = notification.push_subscription_id
-
       redirect_to history_index_path
     rescue ActiveRecord::RecordInvalid => e
       render json: e.message, status: :bad_request
@@ -28,29 +24,18 @@ module Notifications
 
     private
 
-    def authenticate_by_nonce
-      return head :forbidden unless notification
+    def authenticate
+      return authenticate_by_nonce if notification.present?
 
-      notification.update!(nonce: nil)
+      authenticate_by_session
     end
 
     def moods
       Mood.all
     end
 
-    def notification
-      @notification ||= Notification.where(
-        id: response_params[:notification_id],
-        nonce: response_params[:nonce],
-      ).first
-    end
-
-    def notification_nonce
-      notification.nonce
-    end
-
     def response_params
-      params.permit(:nonce, :notes, :notification_id, choices: [])
+      params.permit(:notes, choices: [])
     end
   end
 end

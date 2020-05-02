@@ -26,7 +26,7 @@ body {
   max-width: 100%;
 }
 
-.checkbox-container, input[type=submit] {
+.checkbox-container, .mood-form input[type=submit] {
   background-color: transparent;
   border: 0.125em solid black;
   border-radius: 0.125em;

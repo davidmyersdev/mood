@@ -4,6 +4,6 @@ task notify_subscribers: :environment do
     # safeguard against accidental, successive notifications
     next if subscription.last_successful_notification&.dispatched_after?(1.hour.ago)
 
-    MoodService.notify(subscription)
+    Notifications::MoodService.notify(subscription)
   end
 end
