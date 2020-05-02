@@ -14,6 +14,9 @@ module App
     # autoload the /lib directory
     config.eager_load_paths.push(Rails.root.join('lib'))
 
+    # set the server time zone if specified
+    config.time_zone = ENV['RAILS_TIME_ZONE'] if ENV['RAILS_TIME_ZONE'].present?
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
