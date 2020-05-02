@@ -15,9 +15,11 @@ services:
     environment:
       - EDITOR=vim
       - RAILS_TIME_ZONE=Eastern Time (US & Canada)
+    expose:
+      - 3000
     image: mood
     ports:
-      - 3000:3000
+      - 3000
     stdin_open: true
     tty: true
     volumes:

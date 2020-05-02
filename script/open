@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# find open docker address
+address=$(docker port mood 3000/tcp)
+
+# exit unless address found
+if [ -z $address ]
+then
+  echo 'No address found. Make sure docker is running.' && exit 1
+fi
+
+# swap 0.0.0.0 for localhost
+address=${address/0.0.0.0/localhost}
+
+# https://stackoverflow.com/questions/3466166/how-to-check-if-running-in-cygwin-mac-or-linux
+if [ "$(uname -s)" == "Darwin" ] # osx
+then
+  open http://$address
+else
+  echo "Unable to open links automatically on this OS. Navigate to http://$address." && exit 1
+fi
