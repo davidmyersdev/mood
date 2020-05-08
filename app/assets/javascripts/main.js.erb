@@ -53,7 +53,9 @@ function registerServiceWorker(callback) {
     .serviceWorker
     .register(window.service_worker_path)
     .then((registration) => {
-      console.log('Service worker registered.');
+      console.log('service_worker: registered');
+
+      let service_worker = getServiceWorker(registration);
 
       const subscribeOptions = {
         userVisibleOnly: true,
@@ -62,14 +64,36 @@ function registerServiceWorker(callback) {
         ),
       };
 
-      return registration.pushManager.subscribe(subscribeOptions);
-    })
-    .then((push_subscription) => {
-      callback(push_subscription);
+      if (service_worker) {
+        console.log('service_worker:', service_worker.state);
+
+        // if it's already activated when we get here, go ahead and create the subscription
+        if (service_worker.state == 'activated') {
+          registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+            callback(push_subscription);
+          });
+        }
+
+        // add statechange listener
+        service_worker.addEventListener('statechange', (e) => {
+          console.log('service_worker:', e.target.state);
+
+          // if we get an activated state, the subscription still needs created
+          if (e.target.state == 'activated') {
+            registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+              callback(push_subscription);
+            });
+          }
+        });
+      }
     })
     .catch((error) => {
       console.error(error);
     });
+}
+
+function getServiceWorker(registration) {
+  return registration.installing || registration.waiting || registration.active;
 }
 
 // from https://github.com/GoogleChromeLabs/web-push-codelab/blob/master/app/scripts/main.js
