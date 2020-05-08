@@ -1,51 +1,108 @@
 window.addEventListener('load', () => {
-  if (!('serviceWorker' in navigator)) return console.log('serviceWorker not supported');
-  if (!('PushManager' in window)) return console.log('PushManager not supported');
+  if (!('serviceWorker' in navigator)) return console.log('service_worker: not_supported');
+  if (!('PushManager' in window)) return console.log('subscription: not_supported');
 
-  askPermission();
-  registerServiceWorker((push_subscription) => {
-    console.log('PushSubscription created.');
+  let enableNotificationsButton = document.getElementById('enable-notifications');
 
-    const payload = {
-      subscription: push_subscription,
-      max_actions: Notification.maxActions,
-    };
-
-    // send to API for storage
-    fetch('/push_subscriptions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-    })
-    .then((response) => {
-      if (response.ok)
-        console.log('PushSubscription stored.');
-      else
-        console.log('PushSubscription not stored.');
-    })
-    .catch(error => console.error(error));
-  });
+  if (enableNotificationsButton) {
+    enableNotificationsButton.addEventListener('click', ()  => {
+      askPermission(() => {
+        registerServiceWorker((registration) => {
+          createSubscription(registration, (subscription) => {
+            persistSubscription(subscription);
+          });
+        });
+      });
+    });
+  }
 });
 
-function askPermission() {
+function askPermission(callback) {
   return new Promise((resolve, reject) => {
     const permission_result = Notification.requestPermission(result => resolve(result));
 
-    console.log('Max actions: ', Notification.maxActions);
+    console.log('notification/actions: ', Notification.maxActions);
 
     if (permission_result) permission_result.then(resolve, reject);
   })
   .then((permission_result) => {
-    if (permission_result === 'granted')
-      console.log('Permission granted.');
-    else
-      console.error('Permission not granted.');
+    if (permission_result === 'granted') {
+      console.log('notification: granted');
+
+      callback();
+    }
+    else {
+      console.error('notification: not_granted');
+    }
   })
   .catch((error) => {
     console.error(error);
   });
+}
+
+function createSubscription(registration, callback) {
+  let service_worker = getServiceWorker(registration);
+
+  const subscribeOptions = {
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(
+      window.vapid_public_key
+    ),
+  };
+
+  if (service_worker) {
+    console.log('service_worker:', service_worker.state);
+
+    // if it's already activated when we get here, go ahead and create the subscription
+    if (service_worker.state == 'activated') {
+      registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+        console.log('subscription: created');
+
+        callback(push_subscription);
+      });
+    }
+
+    // add statechange listener
+    service_worker.addEventListener('statechange', (e) => {
+      console.log('service_worker:', e.target.state);
+
+      // if we get an activated state, the subscription still needs created
+      if (e.target.state == 'activated') {
+        registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+          console.log('subscription: created');
+
+          callback(push_subscription);
+        });
+      }
+    });
+  }
+}
+
+function getServiceWorker(registration) {
+  return registration.installing || registration.waiting || registration.active;
+}
+
+function persistSubscription(subscription) {
+  const payload = {
+    subscription: subscription,
+    max_actions: Notification.maxActions,
+  };
+
+  // send to API for storage
+  fetch('/push_subscriptions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload),
+  })
+  .then((response) => {
+    if (response.ok)
+      console.log('subscription: persisted');
+    else
+      console.log('subscription: not_persisted');
+  })
+  .catch(error => console.error(error));
 }
 
 function registerServiceWorker(callback) {
@@ -55,45 +112,11 @@ function registerServiceWorker(callback) {
     .then((registration) => {
       console.log('service_worker: registered');
 
-      let service_worker = getServiceWorker(registration);
-
-      const subscribeOptions = {
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(
-          window.vapid_public_key
-        ),
-      };
-
-      if (service_worker) {
-        console.log('service_worker:', service_worker.state);
-
-        // if it's already activated when we get here, go ahead and create the subscription
-        if (service_worker.state == 'activated') {
-          registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
-            callback(push_subscription);
-          });
-        }
-
-        // add statechange listener
-        service_worker.addEventListener('statechange', (e) => {
-          console.log('service_worker:', e.target.state);
-
-          // if we get an activated state, the subscription still needs created
-          if (e.target.state == 'activated') {
-            registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
-              callback(push_subscription);
-            });
-          }
-        });
-      }
+      callback(registration);
     })
     .catch((error) => {
       console.error(error);
     });
-}
-
-function getServiceWorker(registration) {
-  return registration.installing || registration.waiting || registration.active;
 }
 
 // from https://github.com/GoogleChromeLabs/web-push-codelab/blob/master/app/scripts/main.js
