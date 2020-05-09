@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   get :sign_up, to: 'welcome#sign_up'
 
+  resources :dashboard, only: [:index]
+
   resources :ephemeral, only: [] do
     collection do
       get :authenticate_by_notification
