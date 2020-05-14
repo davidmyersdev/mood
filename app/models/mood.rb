@@ -1,5 +1,5 @@
 class Mood < ApplicationRecord
-  has_many :notification_responses
+  has_many :entries
 
   validates :slug, presence: true
   validates :description, presence: true

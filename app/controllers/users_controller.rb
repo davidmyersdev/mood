@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   end
 
   def sign_in
-    render json: { user: current_user }
+    redirect_to dashboard_index_path
   end
 
   def sign_out
@@ -16,25 +16,25 @@ class UsersController < ApplicationController
     @current_user = nil
     @subscription = nil
 
-    head :ok
+    redirect_to root_path
   end
 
   def sign_up
     @current_user = User.create!(email: user_params[:email], password: user_params[:password])
 
-    render json: { user: current_user }
+    redirect_to dashboard_index_path
   end
 
   private
 
   def authenticate_by_creds
     User.find_by!(email: user_params[:email]).authenticate(user_params[:password]).tap do |user|
-      return head :forbidden unless user
+      return redirect_to root_path unless user
 
       @current_user = user
     end
   rescue ActiveRecord::RecordNotFound => _e
-    head :forbidden
+    redirect_to root_path
   end
 
   def user_params

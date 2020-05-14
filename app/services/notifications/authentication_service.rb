@@ -7,11 +7,17 @@ module Notifications
             actions: [],
             body: 'Tap to automatically sign in on this device.',
             title: 'Mood',
-            type: :authentication,
+            url: url,
           },
         )
 
         send_it!(notification)
+      end
+
+      private
+
+      def url
+        ENV['APP_URL'] + Rails.application.routes.url_helpers.authenticate_by_notification_ephemeral_index_path
       end
     end
   end

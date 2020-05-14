@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_25_135540) do
+ActiveRecord::Schema.define(version: 2020_05_13_035147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "entries", force: :cascade do |t|
+    t.bigint "notification_id"
+    t.jsonb "data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "mood_id"
+    t.text "notes"
+    t.bigint "user_id"
+    t.index ["data"], name: "index_entries_on_data"
+    t.index ["mood_id"], name: "index_entries_on_mood_id"
+    t.index ["notification_id"], name: "index_entries_on_notification_id"
+    t.index ["user_id"], name: "index_entries_on_user_id"
+  end
 
   create_table "moods", force: :cascade do |t|
     t.string "slug", null: false
@@ -21,18 +35,6 @@ ActiveRecord::Schema.define(version: 2020_02_25_135540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_moods_on_slug", unique: true
-  end
-
-  create_table "notification_responses", force: :cascade do |t|
-    t.bigint "notification_id"
-    t.jsonb "data", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "mood_id"
-    t.text "notes"
-    t.index ["data"], name: "index_notification_responses_on_data"
-    t.index ["mood_id"], name: "index_notification_responses_on_mood_id"
-    t.index ["notification_id"], name: "index_notification_responses_on_notification_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -64,8 +66,9 @@ ActiveRecord::Schema.define(version: 2020_02_25_135540) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "notification_responses", "moods"
-  add_foreign_key "notification_responses", "notifications"
+  add_foreign_key "entries", "moods"
+  add_foreign_key "entries", "notifications"
+  add_foreign_key "entries", "users"
   add_foreign_key "notifications", "push_subscriptions"
   add_foreign_key "push_subscriptions", "users"
 end

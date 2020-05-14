@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   private
 
   def authenticate_by_nonce
-    return head :forbidden unless notification
+    return redirect_to root_path unless notification
 
     notification.update!(nonce: nil)
 
@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     @current_user = User.find(session[:user_id])
     @subscription = current_user.push_subscriptions.find_by(id: session[:push_subscription_id])
   rescue ActiveRecord::RecordNotFound => _e
-    head :forbidden
+    redirect_to root_path
   end
 
   def current_user
@@ -38,14 +38,14 @@ class ApplicationController < ActionController::Base
   def notification
     @notification ||= Notification.find_by(
       id: params_notifications[:notification_id],
-      nonce: params_notifications[:nonce],
+      nonce: params_notifications[:notification_nonce],
     )
   end
 
   def params_notifications
     @params_notifications ||= params.permit(
-      :nonce,
       :notification_id,
+      :notification_nonce,
     )
   end
 
