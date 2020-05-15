@@ -3,6 +3,13 @@ module Notifications
     class << self
       private
 
+      def payload(notification)
+        notification.data.merge(
+          notification_id: notification.id,
+          notification_nonce: notification.nonce,
+        )
+      end
+
       def send_it(notification)
         send_it!(notification)
       rescue StandardError => e
@@ -24,23 +31,13 @@ module Notifications
         Webpush.payload_send(
           auth: subscription[:keys][:auth],
           endpoint: subscription[:endpoint],
-          message: serialize_notification(notification),
+          message: JSON.generate(payload(notification)),
           p256dh: subscription[:keys][:p256dh],
           vapid: {
             private_key: Credentials.vapid_private_key,
             public_key: Credentials.vapid_public_key,
             subject: Credentials.vapid_subject,
           },
-        )
-      end
-
-      def serialize_notification(notification)
-        JSON.generate(
-          notification.attributes.with_indifferent_access.slice(
-            :data,
-            :id,
-            :nonce,
-          )
         )
       end
     end

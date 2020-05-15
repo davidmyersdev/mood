@@ -5,23 +5,13 @@ Rails.application.routes.draw do
 
   resources :dashboard, only: [:index]
 
+  resources :entries, only: [:create, :index, :new]
+
   resources :ephemeral, only: [] do
     collection do
       get :authenticate_by_notification
       get :log_me_in
       get :notify_me
-    end
-  end
-
-  resources :notifications, only: [] do
-    scope module: :notifications do
-      resources :responses, only: [:create, :new]
-    end
-
-    scope module: :notifications do
-      collection do
-        resources :history, only: [:index]
-      end
     end
   end
 

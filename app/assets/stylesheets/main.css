@@ -1,123 +1,58 @@
 * {
   box-sizing: border-box;
+  letter-spacing: 0.05em;
 }
 
 body {
   font-family: sans-serif;
-  letter-spacing: 0.0625em;
   margin: 0;
-  padding: 0.5em;
 }
 
-.mood-form {
-  margin: auto;
-  max-width: 50em;
+main {
+  padding: 1em;
 }
 
-.checkboxes-container {
-  border: none;
-  display: inline-flex;
-  flex-direction: column;
-}
-
-.fieldset {
-  border: none;
+label.custom-checkbox-container {
   display: block;
-  max-width: 100%;
+  padding: 0.75em 1em;
 }
 
-.checkbox-container, .mood-form input[type=submit] {
-  background-color: transparent;
-  border: 0.125em solid black;
-  border-radius: 0.125em;
-  font-size: 1em;
-  font-weight: normal;
-  padding: 0.75em;
-  margin: 1em;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+span.custom-control-label {
+  display: inline-block;
   position: relative;
 }
 
-.free-text {
-  background-color: transparent;
-  border: 0.125em solid black;
-  border-radius: 0.125em;
-  font-size: 1em;
-  font-weight: normal;
-  padding: 0.75em;
-  margin: 1em;
-  max-width: 100%;
-  min-height: 7em;
-  width: 20em;
+#entries-graph {
+  margin-bottom: 1em;
 }
 
-.checkboxes-container input[type=submit] {
-  border-color: #007bff;
-  color: #007bff;
-  letter-spacing: 2px;
+.card {
+  margin-bottom: 1em;
 }
 
-.checkbox-container input {
-  opacity: 0;
-  position: absolute;
-  cursor: pointer;
+.card .card-body {
+  padding: 1em;
 }
 
-.checkbox-container input + .checkbox {
-  border: 0.125em solid black;
-  display: inline-flex;
-  width: 1.25em;
-  height: 1.25em;
-  margin-right: 0.5em;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.checkbox-container input + .checkbox .checkmark {
-  border: 0.125em solid black;
-  border-top: none;
-  border-right: none;
-  width: 70%;
-  height: 40%;
-  display: block;
-  transform: rotate(-45deg);
-  margin-top: -0.075em;
-  margin-right: -0.075em;
-}
-
-.checkbox-container input:not(:checked) + .checkbox .checkmark {
-  display: none;
-}
-
-.mood-history-response {
-  border: 0.0625em solid #d1d5da;
-  margin: 0.5em 0 0.5em 0;
-  max-width: 40em;
-}
-
-.mood-history-response > * {
-  padding: 0.5rem;
-}
-
-.mood-history-response .labels {
-  background-color: #f6f8fa;
-  border-bottom: 0.0625em solid #d1d5da;
+.card .labels {
   display: flex;
   flex-wrap: wrap;
   font-size: 0.75em;
-  list-style: none;
-  margin: 0;
+  margin: -0.25em;
 }
 
-.mood-history-response .labels .label {
+.card .labels .label {
   background-color: #eee;
+  border-radius: 0.125em;
   color: #000;
-  margin-right: 0.5em;
   padding: 0.25em 0.75em;
+  margin: 0.25em;
 }
 
-.mood-history-response .timestamp {
+.smaller-text {
   font-size: 0.75em;
+}
+
+.card .card-body .card-text:last-child {
+  margin-bottom: 0;
 }

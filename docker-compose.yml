@@ -13,13 +13,14 @@ services:
     depends_on:
       - db
     environment:
+      - APP_URL=http://localhost:32772
       - EDITOR=vim
       - RAILS_TIME_ZONE=Eastern Time (US & Canada)
     expose:
       - 3000
     image: mood
     ports:
-      - 3000
+      - 32772:3000
     stdin_open: true
     tty: true
     volumes:

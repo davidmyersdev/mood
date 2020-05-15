@@ -1,6 +1,7 @@
 class Notification < ApplicationRecord
   belongs_to :push_subscription
-  has_many :notification_responses
+  has_many :entries
+  has_one :user, through: :push_subscription
 
   before_validation :set_nonce, on: :create
 

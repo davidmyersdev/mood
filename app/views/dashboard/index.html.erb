@@ -1,9 +1,25 @@
-<h2>Mood</h2>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Entries</h5>
+    <p class="card-text">View your entries or add a new one.</p>
+    <a class="card-link" href="<%= entries_path %>">View Entries</a>
+    <a class="card-link" href="<%= new_entry_path %>">New Entry</a>
+  </div>
+</div>
 
-<p>View your mood entries for the past 2 weeks.</p>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Notifications</h5>
+    <p class="card-text">Enable push notifications on this device (the browser will prompt you). This device will be linked to your account.</p>
+    <button id="enable-notifications" class="btn btn-primary">Enable Notifications</button>
+  </div>
+</div>
 
-<p><a class="btn btn-primary" href="<%= history_index_path %>">View Entries</a></p>
-
-<p>Enable push notifications on this device (the browser will prompt you). This device will be linked to your account.</p>
-
-<p><button id="enable-notifications" class="btn btn-primary">Enable Notifications</button></p>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Test It</h5>
+    <h6 class="card-subtitle text-muted mb-3">Ephemeral</h6>
+    <p class="card-text">Send a test notification to all of my registered devices.</p>
+    <a class="btn btn-primary" href="<%= notify_me_ephemeral_index_path %>">Send Notification</a>
+  </div>
+</div>

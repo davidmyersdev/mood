@@ -2,29 +2,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
 
-<canvas id="mood-history"></canvas>
-<input id="notification-responses" type="hidden" value="<%= notification_responses.to_json %>">
+<canvas id="entries-graph"></canvas>
+<input id="notification-responses" type="hidden" value="<%= entries.to_json %>">
 
-<% notification_responses.reverse.each do |response| %>
+<% entries.reverse.each do |response| %>
 
-<div class="mood-history-response">
-  <ul class="labels">
-    <% Array(response.data['choices']).sort.each do |mood| %>
+<div class="card mood-entry">
+  <div class="card-body">
+    <p class="card-text">
+      <span class="labels">
+        <% Array(response.data['choices']).sort.each do |mood| %>
 
-    <li class="label" data-mood="<%= mood %>"><%= mood %></li>
+        <span class="label" data-mood="<%= mood %>"><%= mood %></span>
 
-    <% end %>
-  </ul>
-  <div>
-    <%= response.notes %>
+        <% end %>
+      </span>
+    </p>
+    <p class="card-text"><%= response.notes %></p>
+    <p class="card-text smaller-text">Created on <%= response.created_at.strftime('%a, %-d %b %Y at %-I:%M %p') %></p>
   </div>
-  <div class="timestamp">Created on <%= response.created_at.strftime('%a, %-d %b %Y at %-I:%M %p') %></div>
 </div>
 
 <% end %>
 
 <script>
-  const notification_responses = JSON.parse(document.getElementById('notification-responses').value);
+  const entries = JSON.parse(document.getElementById('notification-responses').value);
 
   function* color_generator() {
     let index = 0;
@@ -127,7 +129,7 @@
   function get_moods() {
     let all_moods = [];
 
-    for (let response of notification_responses) {
+    for (let response of entries) {
       let moods = response.data.choices || [];
 
       for (let mood of moods) {
@@ -164,7 +166,7 @@
 
   var color_map = colors();
 
-  document.querySelectorAll('.mood-history-response li[data-mood]').forEach((el) => {
+  document.querySelectorAll('.mood-entry .label[data-mood]').forEach((el) => {
     let mood = el.dataset.mood;
 
     el.style.backgroundColor = color_map[mood].background_color;
@@ -173,8 +175,8 @@
 
 
   function get_dates() {
-    let start = moment(notification_responses[0].created_at).startOf('day');
-    let end = moment(notification_responses[notification_responses.length - 1].created_at).startOf('day');
+    let start = moment(entries[0].created_at).startOf('day');
+    let end = moment(entries[entries.length - 1].created_at).startOf('day');
     let now = start;
     let dates = [];
 
@@ -221,7 +223,7 @@
       });
     }
 
-    for (let response of notification_responses) {
+    for (let response of entries) {
       let response_moods = response.data.choices || [];
       let created_at = moment(response.created_at).startOf('day');
 
@@ -237,7 +239,7 @@
 
   const datasets = make_datasets();
 
-  var context = document.getElementById('mood-history').getContext('2d');
+  var context = document.getElementById('entries-graph').getContext('2d');
   var chart = new Chart(context, {
     type: 'bar',
     data: {

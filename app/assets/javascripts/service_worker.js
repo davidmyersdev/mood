@@ -1,34 +1,33 @@
-self.addEventListener('push', (event) => {
-  const notification = event.data.json();
+self.addEventListener('notificationclick', handleNotificationClick);
+self.addEventListener('notificationclose', handleNotificationClose);
+self.addEventListener('push', handlePush);
 
-  event.waitUntil(
-    self.registration.showNotification(notification.data.title, {
-      body: notification.data.body,
-      data: notification,
-    })
-  );
-});
-
-self.addEventListener('notificationclick', (event) => {
+async function handleNotificationClick(event) {
   event.notification.close();
+  console.log('notification: click');
 
-  const type = event.notification.data.data.type;
-  let url;
+  const data = event.notification.data;
+  const url = new URL(data.url);
 
-  switch (type) {
-    case 'authentication':
-      url = `/ephemeral/authenticate_by_notification?nonce=${event.notification.data.nonce}&notification_id=${event.notification.data.id}`;
-      break;
-    default:
-      url = `/notifications/${event.notification.data.id}/responses/new?nonce=${event.notification.data.nonce}`;
-      break;
-  }
+  url.searchParams.append('notification_id', data.notification_id);
+  url.searchParams.append('notification_nonce', data.notification_nonce);
 
   event.waitUntil(
     clients.openWindow(url)
   );
-});
+}
 
-self.addEventListener('notificationclose', (event) => {
-  console.log('Notification closed.');
-});
+async function handleNotificationClose(event) {
+  console.log('notification: closed');
+}
+
+async function handlePush(event) {
+  const notification = event.data.json();
+
+  event.waitUntil(
+    self.registration.showNotification(notification.title, {
+      body: notification.body,
+      data: notification,
+    })
+  );
+}

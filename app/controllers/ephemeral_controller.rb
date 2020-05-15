@@ -3,17 +3,19 @@ class EphemeralController < ApplicationController
   before_action :authenticate_by_nonce, only: [:authenticate_by_notification]
 
   def authenticate_by_notification
-    redirect_to history_index_path
+    redirect_to dashboard_index_path
   end
 
   def log_me_in
   end
 
   def notify_me
-    return head :forbidden unless subscription.persisted?
+    return redirect_to root_path unless current_user.persisted?
 
-    Notifications::MoodService.notify(subscription)
+    current_user.push_subscriptions.find_each do |subscription|
+      Notifications::MoodService.notify(subscription)
+    end
 
-    head :ok
+    redirect_to dashboard_index_path
   end
 end

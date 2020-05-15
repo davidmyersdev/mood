@@ -2,6 +2,10 @@ window.addEventListener('load', () => {
   if (!('serviceWorker' in navigator)) return console.log('service_worker: not_supported');
   if (!('PushManager' in window)) return console.log('subscription: not_supported');
 
+  registerServiceWorker((registration) => {
+    console.log('service_worker/registration:', registration);
+  });
+
   let enableNotificationsButton = document.getElementById('enable-notifications');
 
   if (enableNotificationsButton) {

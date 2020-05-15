@@ -7,7 +7,7 @@
     <%= csp_meta_tag %>
 
     <script>
-      window.service_worker_path = '<%= javascript_path 'service_worker' %>';
+      window.service_worker_path = '/service_worker.js';
       window.vapid_public_key = '<%= vapid_public_key %>';
     </script>
 
@@ -17,6 +17,12 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-dark bg-primary">
+      <a class="navbar-brand" href="<%= root_path %>">Mood</a>
+    </nav>
+
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>
