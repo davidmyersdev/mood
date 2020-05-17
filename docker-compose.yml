@@ -13,10 +13,12 @@ services:
     depends_on:
       - db
     environment:
-      - ALLOWED_ORIGINS=localhost
-      - APP_URL=http://localhost:32772
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-localhost}
+      - APP_URL=${APP_URL:-http://localhost:32772}
       - EDITOR=vim
-      - RAILS_TIME_ZONE=Eastern Time (US & Canada)
+      - RACK_ENV=${RACK_ENV:-development}
+      - RAILS_ENV=${RAILS_ENV:-development}
+      - RAILS_TIME_ZONE=${RAILS_TIME_ZONE:-Eastern Time (US & Canada)}
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - SENTRY_CLIENT_DSN=${SENTRY_CLIENT_DSN}
       - SENTRY_DSN=${SENTRY_DSN}
