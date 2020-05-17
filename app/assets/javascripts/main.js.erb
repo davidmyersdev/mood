@@ -105,7 +105,7 @@ function persistSubscription(subscription) {
   };
 
   // send to API for storage
-  fetch('/subscriptions', {
+  fetch('/api/subscriptions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

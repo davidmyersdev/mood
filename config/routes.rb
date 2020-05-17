@@ -21,4 +21,8 @@ Rails.application.routes.draw do
       post :sign_up
     end
   end
+
+  namespace :api do
+    resources :subscriptions, only: [:create]
+  end
 end

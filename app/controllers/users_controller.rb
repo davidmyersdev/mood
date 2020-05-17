@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_by_session, only: [:sign_in, :sign_out, :sign_up]
+  skip_before_action :authenticate, only: [:sign_in, :sign_out, :sign_up]
   before_action :authenticate_by_creds, only: [:sign_in]
 
   def current
