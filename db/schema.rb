@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_13_035147) do
+ActiveRecord::Schema.define(version: 2020_05_17_193556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,24 +38,25 @@ ActiveRecord::Schema.define(version: 2020_05_13_035147) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.bigint "push_subscription_id"
+    t.bigint "subscription_id"
     t.jsonb "data", null: false
     t.datetime "dispatched_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nonce"
     t.index ["data"], name: "index_notifications_on_data"
-    t.index ["push_subscription_id"], name: "index_notifications_on_push_subscription_id"
+    t.index ["subscription_id"], name: "index_notifications_on_subscription_id"
   end
 
-  create_table "push_subscriptions", force: :cascade do |t|
+  create_table "subscriptions", force: :cascade do |t|
     t.bigint "user_id"
     t.jsonb "data", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "max_actions"
-    t.index ["data"], name: "index_push_subscriptions_on_data", unique: true
-    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
+    t.datetime "discarded_at"
+    t.index ["data"], name: "index_subscriptions_on_data", unique: true
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -69,6 +70,6 @@ ActiveRecord::Schema.define(version: 2020_05_13_035147) do
   add_foreign_key "entries", "moods"
   add_foreign_key "entries", "notifications"
   add_foreign_key "entries", "users"
-  add_foreign_key "notifications", "push_subscriptions"
-  add_foreign_key "push_subscriptions", "users"
+  add_foreign_key "notifications", "subscriptions"
+  add_foreign_key "subscriptions", "users"
 end

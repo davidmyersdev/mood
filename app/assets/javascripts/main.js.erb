@@ -71,10 +71,10 @@ function createSubscription(registration, callback) {
 
     // if it's already activated when we get here, go ahead and create the subscription
     if (service_worker.state == 'activated') {
-      registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+      registration.pushManager.subscribe(subscribeOptions).then((subscription) => {
         console.log('subscription: created');
 
-        callback(push_subscription);
+        callback(subscription);
       });
     }
 
@@ -84,10 +84,10 @@ function createSubscription(registration, callback) {
 
       // if we get an activated state, the subscription still needs created
       if (e.target.state == 'activated') {
-        registration.pushManager.subscribe(subscribeOptions).then((push_subscription) => {
+        registration.pushManager.subscribe(subscribeOptions).then((subscription) => {
           console.log('subscription: created');
 
-          callback(push_subscription);
+          callback(subscription);
         });
       }
     });
@@ -105,7 +105,7 @@ function persistSubscription(subscription) {
   };
 
   // send to API for storage
-  fetch('/push_subscriptions', {
+  fetch('/api/subscriptions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   root 'welcome#index'
 
-  get :sign_up, to: 'welcome#sign_up'
+  get :sign_out, controller: :users
+  get :sign_up, controller: :welcome
+  post :sign_in, controller: :users
+  post :sign_up, controller: :users
 
   resources :dashboard, only: [:index]
 
@@ -9,24 +12,11 @@ Rails.application.routes.draw do
 
   resources :ephemeral, only: [] do
     collection do
-      get :authenticate_by_notification
-      get :log_me_in
       get :notify_me
     end
   end
 
-  resources :push_subscriptions, only: [:create] do
-    collection do
-      post :log_me_in
-    end
-  end
-
-  resources :users, only: [] do
-    collection do
-      get :current
-      get :sign_out
-      post :sign_in
-      post :sign_up
-    end
+  namespace :api do
+    resources :subscriptions, only: [:create]
   end
 end

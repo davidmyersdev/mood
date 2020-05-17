@@ -24,6 +24,9 @@
   <body>
     <nav class="navbar navbar-dark bg-primary">
       <a class="navbar-brand" href="<%= root_path %>">Mood</a>
+      <% if current_user.persisted? %>
+        <a class="navbar-text" href="<%= sign_out_path %>">Sign Out</a>
+      <% end %>
     </nav>
 
     <main>

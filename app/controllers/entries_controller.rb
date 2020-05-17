@@ -1,7 +1,4 @@
 class EntriesController < ApplicationController
-  skip_before_action :authenticate_by_session
-  before_action :authenticate
-
   helper_method :entries, :moods, :notification
 
   def index
@@ -12,13 +9,12 @@ class EntriesController < ApplicationController
   end
 
   def create
-    Entry.create!(
+    current_user.entries.create!(
       data: {
         choices: entry_params[:choices],
       },
       notes: entry_params[:notes],
       notification: notification,
-      user: current_user,
     )
 
     redirect_to entries_path
@@ -31,9 +27,13 @@ class EntriesController < ApplicationController
   private
 
   def authenticate
-    return authenticate_by_nonce if notification.present?
+    if notification.present?
+      notification.update!(nonce: nil)
 
-    authenticate_by_session
+      @current_user = notification.subscription.user
+    end
+
+    super
   end
 
   def entries
@@ -49,5 +49,19 @@ class EntriesController < ApplicationController
 
   def moods
     Mood.all
+  end
+
+  def notification
+    @notification ||= Notification.find_by(
+      id: notification_params[:notification_id],
+      nonce: notification_params[:notification_nonce],
+    )
+  end
+
+  def notification_params
+    @notification_params ||= params.permit(
+      :notification_id,
+      :notification_nonce,
+    )
   end
 end

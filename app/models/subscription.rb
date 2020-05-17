@@ -1,4 +1,6 @@
-class PushSubscription < ApplicationRecord
+class Subscription < ApplicationRecord
+  include Discard::Model
+
   belongs_to :user, optional: true
   has_many :notifications
 

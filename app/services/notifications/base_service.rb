@@ -12,6 +12,8 @@ module Notifications
 
       def send_it(notification)
         send_it!(notification)
+      rescue Webpush::ExpiredSubscription => _error
+        notification.subscription.discard!
       rescue StandardError => error
         # TODO: handle webpush errors
         # https://github.com/zaru/webpush/blob/c37b3d2f0550367a830da697f87d2d3f85bafddd/lib/webpush/request.rb#L158-L175
@@ -25,7 +27,7 @@ module Notifications
       end
 
       def webpush_send(notification)
-        subscription = notification.push_subscription.data.with_indifferent_access
+        subscription = notification.subscription.data.with_indifferent_access
 
         Webpush.payload_send(
           auth: subscription[:keys][:auth],
