@@ -13,9 +13,15 @@ services:
     depends_on:
       - db
     environment:
+      - ALLOWED_ORIGINS=localhost
       - APP_URL=http://localhost:32772
       - EDITOR=vim
       - RAILS_TIME_ZONE=Eastern Time (US & Canada)
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_SUBJECT=${VAPID_SUBJECT}
     expose:
       - 3000
     image: mood

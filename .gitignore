@@ -29,3 +29,6 @@
 
 # Ignore minified Insomnia export file
 insomnia-export.json
+
+# Ignore .env (contains secrets)
+.env

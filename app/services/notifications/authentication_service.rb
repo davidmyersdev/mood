@@ -17,7 +17,7 @@ module Notifications
       private
 
       def url
-        ENV['APP_URL'] + Rails.application.routes.url_helpers.authenticate_by_notification_ephemeral_index_path
+        Env.app_url + Rails.application.routes.url_helpers.authenticate_by_notification_ephemeral_index_path
       end
     end
   end

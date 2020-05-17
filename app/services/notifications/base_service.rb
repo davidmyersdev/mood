@@ -34,9 +34,9 @@ module Notifications
           message: JSON.generate(payload(notification)),
           p256dh: subscription[:keys][:p256dh],
           vapid: {
-            private_key: Credentials.vapid_private_key,
-            public_key: Credentials.vapid_public_key,
-            subject: Credentials.vapid_subject,
+            private_key: Env.vapid_private_key,
+            public_key: Env.vapid_public_key,
+            subject: Env.vapid_subject,
           },
         )
       end

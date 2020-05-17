@@ -19,6 +19,8 @@ docker-compose exec web bin/rails g credentials
 
 ### credentials
 
+#### using `config/credentials.yml.enc`
+
 The last command above will generate `config/master.key` and `config/credentials.yml.enc`. The credentials file is encrypted, but you can view the contents with a rails command.
 
 ```shell
@@ -36,6 +38,19 @@ vapid_subject: https://yourdomain.example
 ```
 
 These secrets are all necessary to run the app. The `secret_key_base` is used by Rails, but the VAPID keys are necessary to send web push notifications. This process will generate a new set of VAPID keys for you. For more information about VAPID, [check out the spec](https://tools.ietf.org/html/rfc8292).
+
+#### using `.env` or env vars
+
+```shell
+ALLOWED_ORIGINS=yourdomain.example
+APP_URL=https://yourdomain.example
+RAILS_TIME_ZONE=Eastern Time (US & Canada)
+SECRET_KEY_BASE=arandomstring
+SENTRY_DSN=https://yoursentrydsn.example
+VAPID_PRIVATE_KEY=yourprivatekey
+VAPID_PUBLIC_KEY=yourpublickey
+VAPID_SUBJECT=https://yourdomain.example
+```
 
 ### testing
 
