@@ -14,7 +14,7 @@ class SubscriptionsController < ApplicationController
 
   # this should probably live in the ephemeral controller too... 🤷
   def log_me_in
-    @subscription = Subscription.find_by!(data: data)
+    @subscription = Subscription.kept.find_by!(data: data)
 
     Notifications::AuthenticationService.notify!(subscription)
   rescue ActiveRecord::RecordInvalid => error
