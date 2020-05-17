@@ -1,39 +1,34 @@
 window.addEventListener('load', () => {
   if (!('serviceWorker' in navigator)) return console.log('service_worker: not_supported');
+  if (!('Notification' in window)) return console.log('notification: not_supported');
   if (!('PushManager' in window)) return console.log('subscription: not_supported');
 
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for (let registration of registrations) {
-      // should only be one...
-      let new_path = '/service_worker.js';
-      let old_path = registration.active.scriptURL.slice(new_path.length * -1);
+  console.log('notification/permission:', Notification.permission);
 
-      console.log('service_worker/new_path:', new_path);
-      console.log('service_worker/old_path:', old_path);
-
-      if (new_path != old_path) {
-        registration.unregister().then((is_unregistered) => {
-          console.log('service_worker/unregister:', is_unregistered);
-
-          registerServiceWorker((registration) => {
-            console.log('service_worker/registration:', registration);
-          });
-        });
-      }
-    }
-  });
+  if (Notification.permission == 'granted') {
+    registerServiceWorker((registration) => {
+      createSubscription(registration, (subscription) => {
+        persistSubscription(subscription);
+      });
+    });
+  }
 
   let enableNotificationsButton = document.getElementById('enable-notifications');
 
   if (enableNotificationsButton) {
     enableNotificationsButton.addEventListener('click', ()  => {
-      askPermission(() => {
-        registerServiceWorker((registration) => {
-          createSubscription(registration, (subscription) => {
-            persistSubscription(subscription);
+      if (Notification.permission == 'denied') {
+        alert('It appears notifications are currently disabled for this site on your device. If you would like to enable notifications, you will need to fix this in your browser settings.');
+      }
+      else {
+        askPermission(() => {
+          registerServiceWorker((registration) => {
+            createSubscription(registration, (subscription) => {
+              persistSubscription(subscription);
+            });
           });
         });
-      });
+      }
     });
   }
 });
@@ -53,7 +48,7 @@ function askPermission(callback) {
       callback();
     }
     else {
-      console.error('notification: not_granted');
+      console.log('notification: not_granted');
     }
   })
   .catch((error) => {
