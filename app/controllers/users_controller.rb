@@ -1,10 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate, only: [:sign_in, :sign_out, :sign_up]
-  before_action :authenticate_by_creds, only: [:sign_in]
-
-  def current
-    render json: { user: current_user }
-  end
+  skip_before_action :authenticate, only: [:sign_out, :sign_up]
 
   def sign_in
     redirect_to dashboard_index_path
@@ -14,7 +9,6 @@ class UsersController < ApplicationController
     reset_session
 
     @current_user = nil
-    @subscription = nil
 
     redirect_to root_path
   end
@@ -27,12 +21,10 @@ class UsersController < ApplicationController
 
   private
 
-  def authenticate_by_creds
-    User.find_by!(email: user_params[:email]).authenticate(user_params[:password]).tap do |user|
-      return redirect_to root_path unless user
+  def authenticate
+    @current_user = User.find_by!(email: user_params[:email]).authenticate(user_params[:password])
 
-      @current_user = user
-    end
+    super
   rescue ActiveRecord::RecordNotFound => _error
     redirect_to root_path
   end
