@@ -22,9 +22,8 @@ class EntriesController < ApplicationController
     )
 
     redirect_to entries_path
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error('Entry Creation Error')
-    Rails.logger.error(e)
+  rescue ActiveRecord::RecordInvalid => error
+    Raven.capture_exception(error)
 
     redirect_to new_entry_path
   end

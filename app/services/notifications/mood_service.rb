@@ -17,7 +17,7 @@ module Notifications
       private
 
       def url
-        ENV['APP_URL'] + Rails.application.routes.url_helpers.new_entry_path
+        Env.app_url + Rails.application.routes.url_helpers.new_entry_path
       end
     end
   end

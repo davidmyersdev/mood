@@ -12,11 +12,10 @@ module Notifications
 
       def send_it(notification)
         send_it!(notification)
-      rescue StandardError => e
+      rescue StandardError => error
         # TODO: handle webpush errors
         # https://github.com/zaru/webpush/blob/c37b3d2f0550367a830da697f87d2d3f85bafddd/lib/webpush/request.rb#L158-L175
-        Rails.logger.info('WebPush Error')
-        Rails.logger.info(e.inspect)
+        Raven.capture_exception(error)
       end
 
       def send_it!(notification)
@@ -34,9 +33,9 @@ module Notifications
           message: JSON.generate(payload(notification)),
           p256dh: subscription[:keys][:p256dh],
           vapid: {
-            private_key: Credentials.vapid_private_key,
-            public_key: Credentials.vapid_public_key,
-            subject: Credentials.vapid_subject,
+            private_key: Env.vapid_private_key,
+            public_key: Env.vapid_public_key,
+            subject: Env.vapid_subject,
           },
         )
       end

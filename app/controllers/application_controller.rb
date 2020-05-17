@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   def authenticate_by_session
     @current_user = User.find(session[:user_id])
     @subscription = current_user.push_subscriptions.find_by(id: session[:push_subscription_id])
-  rescue ActiveRecord::RecordNotFound => _e
+  rescue ActiveRecord::RecordNotFound => _error
     redirect_to root_path
   end
 

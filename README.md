@@ -13,11 +13,13 @@ docker-compose up -d
 # create and migrate database
 docker-compose exec web bin/rails db:create db:migrate
 
-# generate credentials (read more below)
+# generate credentials (see secrets below)
 docker-compose exec web bin/rails g credentials
 ```
 
-### credentials
+### secrets
+
+#### with `config/credentials.yml.enc`
 
 The last command above will generate `config/master.key` and `config/credentials.yml.enc`. The credentials file is encrypted, but you can view the contents with a rails command.
 
@@ -36,6 +38,22 @@ vapid_subject: https://yourdomain.example
 ```
 
 These secrets are all necessary to run the app. The `secret_key_base` is used by Rails, but the VAPID keys are necessary to send web push notifications. This process will generate a new set of VAPID keys for you. For more information about VAPID, [check out the spec](https://tools.ietf.org/html/rfc8292).
+
+#### with `.env` (used by docker-compose) or env vars
+
+```shell
+ALLOWED_ORIGINS=yourdomain.example
+APP_URL=https://yourdomain.example
+RACK_ENV=development
+RAILS_ENV=development
+RAILS_TIME_ZONE=Eastern Time (US & Canada)
+SECRET_KEY_BASE=arandomstring
+SENTRY_CLIENT_DSN=https://yoursentryclientdsn.example
+SENTRY_DSN=https://yoursentryserverdsn.example
+VAPID_PRIVATE_KEY=yourprivatekey
+VAPID_PUBLIC_KEY=yourpublickey
+VAPID_SUBJECT=https://yourdomain.example
+```
 
 ### testing
 
@@ -64,11 +82,30 @@ ALLOWED_ORIGINS='app1.example,app2.example'
 
 As documented above, you can specify multiple domains with a `,` delimiter.
 
-### credentials
+### secrets
 
-You should generate a new credentials file for production. You can use the same generator from the development section above. If you would prefer to use an environment variable instead of the generated `config/master.key`, you can configure it like this.
+You can generate a new credentials file for production by using the same generator from the development section above. This will generate a `config/master.key` file. If you would prefer to use an environment variable for the master key, you can configure it like this.
 
 ```shell
 # used to decrypt your credentials file
-RAILS_MASTER_KEY='arandomstring'
+RAILS_MASTER_KEY=arandomstring
+```
+
+#### with env vars
+
+You can forgo the credentials file entirely by using environment variables.
+
+```shell
+ALLOWED_ORIGINS=yourdomain.example
+APP_URL=https://yourdomain.example
+DATABASE_URL=postgres://username:password@yourdatabasehost.example:5432
+RACK_ENV=production
+RAILS_ENV=production
+RAILS_TIME_ZONE=Eastern Time (US & Canada)
+SECRET_KEY_BASE=arandomstring
+SENTRY_CLIENT_DSN=https://yoursentryclientdsn.example
+SENTRY_DSN=https://yoursentryserverdsn.example
+VAPID_PRIVATE_KEY=yourprivatekey
+VAPID_PUBLIC_KEY=yourpublickey
+VAPID_SUBJECT=https://yourdomain.example
 ```
