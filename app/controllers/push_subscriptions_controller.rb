@@ -8,17 +8,17 @@ class PushSubscriptionsController < ApplicationController
     end
 
     render json: subscription, status: :created
-  rescue ActiveRecord::RecordInvalid => e
-    render json: e.message, status: :bad_request
+  rescue ActiveRecord::RecordInvalid => error
+    render json: error.message, status: :bad_request
   end
 
-  # this should probably live in the ephemeral controller too... 🤷‍
+  # this should probably live in the ephemeral controller too... 🤷
   def log_me_in
     @subscription = PushSubscription.find_by!(data: data)
 
     Notifications::AuthenticationService.notify!(subscription)
-  rescue ActiveRecord::RecordInvalid => e
-    render json: e.message, status: :bad_request
+  rescue ActiveRecord::RecordInvalid => error
+    render json: error.message, status: :bad_request
   end
 
   private

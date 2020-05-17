@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
       @current_user = user
     end
-  rescue ActiveRecord::RecordNotFound => _e
+  rescue ActiveRecord::RecordNotFound => _error
     redirect_to root_path
   end
 
