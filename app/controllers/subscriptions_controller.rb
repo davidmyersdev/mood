@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  skip_before_action :authenticate_by_session, only: [:create, :log_me_in]
+  skip_before_action :authenticate_by_session, only: [:create]
 
   def create
     @subscription = Subscription.find_or_create_by!(data: data) do |ps|
@@ -8,15 +8,6 @@ class SubscriptionsController < ApplicationController
     end
 
     render json: subscription, status: :created
-  rescue ActiveRecord::RecordInvalid => error
-    render json: error.message, status: :bad_request
-  end
-
-  # this should probably live in the ephemeral controller too... 🤷
-  def log_me_in
-    @subscription = Subscription.kept.find_by!(data: data)
-
-    Notifications::AuthenticationService.notify!(subscription)
   rescue ActiveRecord::RecordInvalid => error
     render json: error.message, status: :bad_request
   end
