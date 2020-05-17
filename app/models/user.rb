@@ -2,8 +2,8 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :entries
-  has_many :push_subscriptions
-  has_many :notifications, through: :push_subscriptions
+  has_many :subscriptions
+  has_many :notifications, through: :subscriptions
 
   validates :email, presence: true, uniqueness: true
 

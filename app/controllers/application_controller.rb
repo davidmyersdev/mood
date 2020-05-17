@@ -12,13 +12,13 @@ class ApplicationController < ActionController::Base
 
     notification.update!(nonce: nil)
 
-    @subscription = notification.push_subscription
+    @subscription = notification.subscription
     @current_user = subscription.user
   end
 
   def authenticate_by_session
     @current_user = User.find(session[:user_id])
-    @subscription = current_user.push_subscriptions.find_by(id: session[:push_subscription_id])
+    @subscription = current_user.subscriptions.find_by(id: session[:subscription_id])
   rescue ActiveRecord::RecordNotFound => _error
     redirect_to root_path
   end
@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
   def set_session_subscription
     return unless subscription.persisted?
 
-    session[:push_subscription_id] = subscription.id
+    session[:subscription_id] = subscription.id
   end
 
   def set_session_user
@@ -62,6 +62,6 @@ class ApplicationController < ActionController::Base
   end
 
   def subscription
-    @subscription ||= PushSubscription.find_by(id: session[:push_subscription_id]) || PushSubscription.new
+    @subscription ||= Subscription.find_by(id: session[:subscription_id]) || Subscription.new
   end
 end

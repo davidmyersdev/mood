@@ -12,7 +12,7 @@ class EphemeralController < ApplicationController
   def notify_me
     return redirect_to root_path unless current_user.persisted?
 
-    current_user.push_subscriptions.find_each do |subscription|
+    current_user.subscriptions.find_each do |subscription|
       Notifications::MoodService.notify(subscription)
     end
 

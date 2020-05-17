@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :push_subscriptions, only: [:create] do
+  resources :subscriptions, only: [:create] do
     collection do
       post :log_me_in
     end

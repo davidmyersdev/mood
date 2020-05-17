@@ -1,8 +1,8 @@
-class PushSubscriptionsController < ApplicationController
+class SubscriptionsController < ApplicationController
   skip_before_action :authenticate_by_session, only: [:create, :log_me_in]
 
   def create
-    @subscription = PushSubscription.find_or_create_by!(data: data) do |ps|
+    @subscription = Subscription.find_or_create_by!(data: data) do |ps|
       ps.max_actions = max_actions
       ps.user = current_user if current_user.persisted?
     end
@@ -14,7 +14,7 @@ class PushSubscriptionsController < ApplicationController
 
   # this should probably live in the ephemeral controller too... 🤷
   def log_me_in
-    @subscription = PushSubscription.find_by!(data: data)
+    @subscription = Subscription.find_by!(data: data)
 
     Notifications::AuthenticationService.notify!(subscription)
   rescue ActiveRecord::RecordInvalid => error

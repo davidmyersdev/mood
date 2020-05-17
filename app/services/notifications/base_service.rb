@@ -25,7 +25,7 @@ module Notifications
       end
 
       def webpush_send(notification)
-        subscription = notification.push_subscription.data.with_indifferent_access
+        subscription = notification.subscription.data.with_indifferent_access
 
         Webpush.payload_send(
           auth: subscription[:keys][:auth],
