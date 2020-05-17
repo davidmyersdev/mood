@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
   before_action :authenticate
 
+  helper_method :current_user
+
   private
 
   def authenticate
