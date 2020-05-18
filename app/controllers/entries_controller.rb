@@ -1,11 +1,25 @@
 class EntriesController < ApplicationController
-  helper_method :entries, :moods, :notification
+  helper_method :entries, :entry, :moods, :notification
 
   def index
   end
 
+  def edit
+  end
+
   def new
     notification.regenerate_nonce! if notification
+  end
+
+  def update
+    entry.update!(
+      data: {
+        choices: entry_params[:choices],
+      },
+      notes: entry_params[:notes],
+    )
+
+    redirect_to entries_path
   end
 
   def create
@@ -43,8 +57,12 @@ class EntriesController < ApplicationController
       .order(created_at: :asc)
   end
 
+  def entry
+    @entry ||= current_user.entries.find(entry_params[:id])
+  end
+
   def entry_params
-    params.permit(:notes, choices: [])
+    params.permit(:id, :notes, choices: [])
   end
 
   def moods
