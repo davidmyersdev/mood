@@ -1,0 +1,30 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Edit Entry</h5>
+    <h6 class="card-subtitle text-muted mb-3">How were you actually feeling?</h6>
+
+    <%= form_for entry, local: true do %>
+      <div class="form-group">
+        <label>Choose one or more</label>
+
+        <% moods.each do |mood| %>
+          <label class="custom-checkbox-container border rounded mb-1">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" name="choices[]" value="<%= mood.slug %>" <%= :checked if entry.data['choices'].include?(mood.slug) %>>
+              <span class="custom-control-label"><%= mood.description %></span>
+            </div>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Add a note</label>
+        <textarea id="notes" class="form-control" rows="3" name="notes"><%= entry.notes %></textarea>
+      </div>
+
+      <p class="card-text smaller-text">First created on <%= entry.created_at.strftime('%a, %-d %b %Y at %-I:%M %p') %></p>
+
+      <button type="submit" class="btn btn-primary">Update Entry</button>
+    <% end %>
+  </div>
+</div>

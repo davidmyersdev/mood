@@ -6,6 +6,14 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  rescue_from StandardError do |error|
+    Raven.capture_exception(error)
+
+    flash.alert = 'An unknown error has occurred. Please try again.'
+
+    redirect_to root_path
+  end
+
   private
 
   def authenticate

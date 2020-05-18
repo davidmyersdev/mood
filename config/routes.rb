@@ -7,8 +7,7 @@ Rails.application.routes.draw do
   post :sign_up, controller: :users
 
   resources :dashboard, only: [:index]
-
-  resources :entries, only: [:create, :index, :new]
+  resources :entries, only: [:create, :edit, :index, :new, :update]
 
   resources :ephemeral, only: [] do
     collection do
