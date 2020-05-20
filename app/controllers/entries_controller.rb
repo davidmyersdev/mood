@@ -1,4 +1,5 @@
 class EntriesController < ApplicationController
+  helper_method :end_date, :start_date
   helper_method :entries, :entry, :moods, :notification
 
   def index
@@ -50,11 +51,20 @@ class EntriesController < ApplicationController
     super
   end
 
+  def end_date
+    @end_date ||= if entry_params[:end_date].present?
+      Time.parse(entry_params[:end_date]).end_of_day
+    else
+      Time.current
+    end
+  rescue ArgumentError => error
+    Raven.capture_exception(error)
+
+    Time.current
+  end
+
   def entries
-    @entries ||= Entry
-      .where(user: current_user)
-      .where(created_at: 2.weeks.ago..Time.current)
-      .order(created_at: :asc)
+    current_user.entries.where(created_at: start_date..end_date).order(created_at: :asc)
   end
 
   def entry
@@ -62,7 +72,7 @@ class EntriesController < ApplicationController
   end
 
   def entry_params
-    params.permit(:id, :notes, choices: [])
+    params.permit(:id, :end_date, :notes, choices: [])
   end
 
   def moods
@@ -81,5 +91,9 @@ class EntriesController < ApplicationController
       :notification_id,
       :notification_nonce,
     )
+  end
+
+  def start_date
+    @start_date ||= (end_date - 13.days).beginning_of_day
   end
 end

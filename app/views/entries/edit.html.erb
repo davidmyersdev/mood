@@ -10,7 +10,7 @@
         <% moods.each do |mood| %>
           <label class="custom-checkbox-container border rounded mb-1">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" name="choices[]" value="<%= mood.slug %>" <%= :checked if entry.data['choices'].include?(mood.slug) %>>
+              <input type="checkbox" class="custom-control-input" name="choices[]" value="<%= mood.slug %>" <%= :checked if Array(entry.data['choices']).include?(mood.slug) %>>
               <span class="custom-control-label"><%= mood.description %></span>
             </div>
           </label>
