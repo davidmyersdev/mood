@@ -1,0 +1,19 @@
+<h4>Subscriptions</h4>
+
+<% subscriptions.each do |subscription| %>
+
+<div class="card">
+  <div class="card-body">
+    <% if subscription.description.present? %>
+      <h5 class="card-title"><%= subscription.description %></h5>
+    <% end %>
+
+    <% if subscription.device.recognized? %>
+      <p class="card-text"><%= "#{subscription.device.browser} on #{subscription.device.name || subscription.device.os}" %></p>
+    <% else %>
+      <p class="card-text">Unknown Device</p>
+    <% end %>
+  </div>
+</div>
+
+<% end %>

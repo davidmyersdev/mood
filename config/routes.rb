@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :dashboard, only: [:index]
   resources :entries, only: [:create, :edit, :index, :new, :update]
+  resources :subscriptions, only: [:index]
 
   resources :ephemeral, only: [] do
     collection do

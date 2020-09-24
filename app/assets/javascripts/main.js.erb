@@ -1,3 +1,5 @@
+const DEVICE_DESCRIPTION_KEY = 'device_description';
+
 window.addEventListener('load', () => {
   if (!('serviceWorker' in navigator)) return console.log('service_worker: not_supported');
   if (!('Notification' in window)) return console.log('notification: not_supported');
@@ -94,14 +96,28 @@ function createSubscription(registration, callback) {
   }
 }
 
+function fetchDeviceDescription() {
+  const element = document.getElementById('device-description');
+
+  if (!!element && !!element.value) {
+    localStorage.setItem(DEVICE_DESCRIPTION_KEY, element.value);
+
+    return element.value;
+  }
+
+  return localStorage.getItem(DEVICE_DESCRIPTION_KEY);
+}
+
 function getServiceWorker(registration) {
   return registration.installing || registration.waiting || registration.active;
 }
 
 function persistSubscription(subscription) {
-  const payload = {
-    subscription: subscription,
+  let payload = {
+    description: fetchDeviceDescription(),
     max_actions: Notification.maxActions,
+    subscription: subscription,
+    user_agent: navigator.userAgent,
   };
 
   // send to API for storage

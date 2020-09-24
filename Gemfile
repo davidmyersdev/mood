@@ -6,6 +6,7 @@ ruby '~> 2.5.3'
 gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'coffee-rails', '~> 4.2'
+gem 'device_detector', require: false
 gem 'discard'
 gem 'jbuilder', '~> 2.5'
 gem 'jwt'
